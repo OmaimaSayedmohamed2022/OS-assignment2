@@ -143,7 +143,7 @@ enum Activity
 
 }
 
-class Device
+class Device extends Thread
 {
     public static Router router;
     public int id;
@@ -154,7 +154,8 @@ class Device
     public Device(String name, String type, Router router){
         this.name=name;
         this.type=type;
-        Device.router=router;
+        this.router=router;
+        this.activity = Activity.connect;
     }
     public String getDeviceName() {
         return name;
@@ -178,5 +179,35 @@ class Device
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+    @Override
+    public void run()
+    {
+        if (this.activity == Activity.connect)
+        {
+            System.out.println("connected");
+            try {
+                this.router.occupyConnection();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            this.activity = Activity.perform_online_activity;
+        }
+        if (this.activity == Activity.perform_online_activity)
+        {
+            try {
+                Thread.sleep(3000);
+                System.out.println("performing online activity");
+                this.activity = Activity.disconnect;
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+        if (this.activity == Activity.disconnect)
+        {
+            System.out.println("disconnected");
+            this.router.releaseConnection();
+        }
     }
 }
