@@ -135,3 +135,48 @@ class Router {
         }
     }
 }
+enum Activity
+{
+    connect,
+    perform_online_activity,
+    disconnect
+
+}
+
+class Device
+{
+    public static Router router;
+    public int id;
+    private String name;
+    private String type;
+    private Activity activity;
+
+    public Device(String name, String type, Router router){
+        this.name=name;
+        this.type=type;
+        Device.router=router;
+    }
+    public String getDeviceName() {
+        return name;
+    }
+
+    public void setDeviceName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+}
